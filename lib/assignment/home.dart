@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:module_12_assignment/assignment/widget/buttondesign.dart';
 
 class home extends StatefulWidget {
-  const home({super.key});
+  final bool isDarkMode;
+  final VoidCallback toggleTheme;
+  const home({super.key, required this.isDarkMode, required this.toggleTheme});
 
   @override
   State<home> createState() => _homeState();
@@ -70,7 +72,6 @@ class _homeState extends State<home> {
             _output = number2 != 0 ? (number1 / number2).toString() : 'Error';
           }
 
-          _operator = _operator;
         }
       } else if (['+', '-', '*', '÷'].contains(value)) {
         if (value == '-' && _input.isEmpty) {
@@ -86,28 +87,14 @@ class _homeState extends State<home> {
           _input = '';
           _output = '';
         }
-
         return;
-      } else if (value == '=') {
-        _output = _output;
-        if (value == '+/-') {
-          if (_output.startsWith('-')) {
-            _output = _output.substring(1);
-          } else {
-            _output = '-$_output';
-          }
-        }
-        number1 = 0;
-        _operator = '';
-        number2 = 0;
-      } else {
+      }  else {
         if (_output.isNotEmpty && _operator.isEmpty && _input.isEmpty) {
           _output = '';
           _input = value;
         } else {
           _input += value;
         }
-        //_output = _input;
       }
     });
   }
@@ -116,14 +103,36 @@ class _homeState extends State<home> {
     if (num % 1 == 0) {
       return num.toInt().toString();
     } else {
-      return num.toString(); 
+      return num.toString();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = widget.isDarkMode;
+    final operatorButon = isDark ? Colors.orange[100] : Colors.orange;
+    final textColor = isDark ? Colors.black : Colors.red[400];
+
     return Scaffold(
-      backgroundColor: Colors.white50,
+      backgroundColor: isDark ? Colors.black : Colors.white,
+      appBar: AppBar(
+        title: Text('Calculator'),
+        backgroundColor: Colors.blue,
+        actions: [
+          IconButton(
+            icon: isDark
+                ? Icon(
+                    Icons.wb_sunny,
+                    color: isDark ? Colors.white : Colors.black,
+                  )
+                : Icon(
+                    Icons.nightlight_round,
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
+            onPressed: widget.toggleTheme,
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(10),
@@ -135,25 +144,26 @@ class _homeState extends State<home> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      SizedBox(height:30),
+                      SizedBox(height: 10),
+
                       //input value
                       Text(
                         '${number1 != 0 ? _formatNumber(number1) : ''} ${_operator} ${_input}',
                         style: TextStyle(
-                          color: Colors.black,
+                          color: isDark ? Colors.grey : Colors.black,
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       SizedBox(height: 30),
-                
+
                       // calculation value
                       Text(
                         _output.isNotEmpty
                             ? _formatNumber(double.parse(_output))
                             : '',
                         style: TextStyle(
-                          color: Colors.black,
+                          color: isDark ? Colors.grey : Colors.black,
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
                         ),
@@ -165,18 +175,24 @@ class _homeState extends State<home> {
               SizedBox(height: 30),
 
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  buttondesign(onclick: () => buttonPress('AC'), text: 'AC',color: Colors.white10,textStyle: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red),),
+                  buttondesign(
+                    onclick: () => buttonPress('AC'),
+                    text: 'AC',
+                    color: isDark ? Colors.orange[100] : Colors.grey[300],
+                    textStyle: TextStyle(
+                      color: textColor,
+                    ),
+                  ),
                   buttondesign(onclick: () => buttonPress('%'), text: '%'),
                   buttondesign(onclick: () => buttonPress('+/-'), text: '+/-'),
                   buttondesign(
                     onclick: () => buttonPress('<'),
                     text: '<-',
-                    color: Colors.red[500],
+                    color: isDark ? Colors.orange[100] : Colors.grey[300],
+                    textStyle: TextStyle(
+                      color: textColor,
+                    ),
                   ),
                 ],
               ),
@@ -188,7 +204,7 @@ class _homeState extends State<home> {
                   buttondesign(
                     onclick: () => buttonPress('÷'),
                     text: '÷',
-                    color: Colors.orange,
+                    color: operatorButon,
                   ),
                 ],
               ),
@@ -200,7 +216,7 @@ class _homeState extends State<home> {
                   buttondesign(
                     onclick: () => buttonPress('*'),
                     text: '*',
-                    color: Colors.orange,
+                    color: operatorButon,
                   ),
                 ],
               ),
@@ -212,7 +228,7 @@ class _homeState extends State<home> {
                   buttondesign(
                     onclick: () => buttonPress('-'),
                     text: '-',
-                    color: Colors.orange,
+                    color: operatorButon,
                   ),
                 ],
               ),
@@ -224,7 +240,7 @@ class _homeState extends State<home> {
                   buttondesign(
                     onclick: () => buttonPress('+'),
                     text: '+',
-                    color: Colors.orange,
+                    color: operatorButon,
                   ),
                 ],
               ),
