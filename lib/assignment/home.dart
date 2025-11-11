@@ -1,4 +1,4 @@
-import 'dart:ffi';
+
 
 import 'package:flutter/material.dart';
 import 'package:module_12_assignment/assignment/widget/buttondesign.dart';
@@ -188,7 +188,7 @@ class _homeState extends State<home> {
                   buttondesign(onclick: () => buttonPress('+/-'), text: '+/-'),
                   buttondesign(
                     onclick: () => buttonPress('<'),
-                    text: '<-',
+                    text: '⌫',
                     color: isDark ? Colors.orange[100] : Colors.grey[300],
                     textStyle: TextStyle(
                       color: textColor,
