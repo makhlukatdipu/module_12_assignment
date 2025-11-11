@@ -160,7 +160,9 @@ class _homeState extends State<home> {
                       // calculation value
                       Text(
                         _output.isNotEmpty
+                            ? (double.tryParse(_output) != null
                             ? _formatNumber(double.parse(_output))
+                            : _output)
                             : '',
                         style: TextStyle(
                           color: isDark ? Colors.grey : Colors.black,
